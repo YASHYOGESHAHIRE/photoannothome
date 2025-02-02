@@ -341,53 +341,79 @@
     </footer>
 
     <script>
-
-
-let annotations = [];
-        let isDrawing = false;
-        
-        function autoAnnotate() {
-            const mockAnnotations = [
-                { x: 100, y: 150, width: 200, height: 100, label: 'Person' },
-                { x: 300, y: 200, width: 150, height: 80, label: 'Car' }
-            ];
+    // Place this at the end of your HTML file, replacing the existing script section
+    // Wake up server function
+    async function wakeUpRenderServer() {
+        try {
+            const renderUrl = 'https://photoannot.onrender.com/preview;  // Replace with your actual Render URL
+            const startTime = Date.now();
             
-            annotations = mockAnnotations;
-            renderAnnotations();
-            document.getElementById('object-count').textContent = annotations.length;
-        }
-        
-        function renderAnnotations() {
-            const layer = document.getElementById('annotation-layer');
-            layer.innerHTML = '';
-            
-            annotations.forEach(ann => {
-                const box = document.createElement('div');
-                box.style.position = 'absolute';
-                box.style.left = `${ann.x}px`;
-                box.style.top = `${ann.y}px`;
-                box.style.width = `${ann.width}px`;
-                box.style.height = `${ann.height}px`;
-                box.style.border = '2px solid green';
-                box.style.pointerEvents = 'none';
-                
-                const label = document.createElement('div');
-                label.textContent = ann.label;
-                label.style.position = 'absolute';
-                label.style.top = '-20px';
-                label.style.background = 'green';
-                label.style.color = 'white';
-                label.style.padding = '2px 4px';
-                
-                box.appendChild(label);
-                layer.appendChild(box);
+            const response = await fetch(renderUrl, {
+                method: 'GET',
+                mode: 'no-cors'
             });
+            
+            const endTime = Date.now();
+            console.log(`Wake-up call completed in ${endTime - startTime}ms`);
+            return true;
+        } catch (error) {
+            console.log('Wake-up call attempted');
+            return false;
         }
+    }
+
+    // Annotation related code
+    let annotations = [];
+    let isDrawing = false;
+    
+    function autoAnnotate() {
+        const mockAnnotations = [
+            { x: 100, y: 150, width: 200, height: 100, label: 'Person' },
+            { x: 300, y: 200, width: 150, height: 80, label: 'Car' }
+        ];
         
-        function startDrawing() {
-            isDrawing = !isDrawing;
-            alert(isDrawing ? 'Drawing mode activated' : 'Drawing mode deactivated');
-        }
+        annotations = mockAnnotations;
+        renderAnnotations();
+        document.getElementById('object-count').textContent = annotations.length;
+    }
+    
+    function renderAnnotations() {
+        const layer = document.getElementById('annotation-layer');
+        layer.innerHTML = '';
+        
+        annotations.forEach(ann => {
+            const box = document.createElement('div');
+            box.style.position = 'absolute';
+            box.style.left = `${ann.x}px`;
+            box.style.top = `${ann.y}px`;
+            box.style.width = `${ann.width}px`;
+            box.style.height = `${ann.height}px`;
+            box.style.border = '2px solid green';
+            box.style.pointerEvents = 'none';
+            
+            const label = document.createElement('div');
+            label.textContent = ann.label;
+            label.style.position = 'absolute';
+            label.style.top = '-20px';
+            label.style.background = 'green';
+            label.style.color = 'white';
+            label.style.padding = '2px 4px';
+            
+            box.appendChild(label);
+            layer.appendChild(box);
+        });
+    }
+    
+    function startDrawing() {
+        isDrawing = !isDrawing;
+        alert(isDrawing ? 'Drawing mode activated' : 'Drawing mode deactivated');
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', () => {
+        wakeUpRenderServer();  // Wake up server when page loads
+    })
+        
          </script>
 </body>
 </html>
